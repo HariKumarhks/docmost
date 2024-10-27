@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectKysely } from 'nestjs-kysely';
 import { KyselyDB, KyselyTransaction } from '../../types/kysely.types';
 import { dbOrTx } from '../../utils';
@@ -17,6 +17,8 @@ import { SpaceMemberRepo } from '@docmost/db/repos/space/space-member.repo';
 
 @Injectable()
 export class PageRepo {
+  private readonly logger = new Logger('TESTTTT2');
+
   constructor(
     @InjectKysely() private readonly db: KyselyDB,
     private spaceMemberRepo: SpaceMemberRepo,
@@ -73,6 +75,52 @@ export class PageRepo {
     }
 
     return query.executeTakeFirst();
+  }
+
+  async findBySpaceId(
+    spaceId: string,
+    opts?: {
+      includeContent?: boolean;
+      includeYdoc?: boolean;
+      includeSpace?: boolean;
+      withLock?: boolean;
+      trx?: KyselyTransaction;
+    },
+  ): Promise<Page[]> {
+    const db = dbOrTx(this.db, opts?.trx);
+
+    /*     let query = db
+      .selectFrom('pages')
+      .select(this.baseFields)
+      .$if(opts?.includeContent, (qb) => qb.select('content'))
+      .$if(opts?.includeYdoc, (qb) => qb.select('ydoc')); */
+
+    let query = this.db
+      .selectFrom('pages')
+      .select(this.baseFields)
+      .$if(opts?.includeContent, (qb) => qb.select('content'))
+      // .orderBy('position', 'asc')
+      .where('spaceId', '=', spaceId);
+
+    if (opts?.includeSpace) {
+      query = query.select((eb) => this.withSpace(eb));
+    }
+
+    if (opts?.withLock && opts?.trx) {
+      query = query.forUpdate();
+    }
+
+    // const result = executeWithPagination(query, {
+    //   page: pagination.page,
+    //   perPage: 250,
+    // });
+
+    // const ress = await query.execute();
+    // this.logger.log(`LOGexecute ALLLL:: , len::${ress.length} ${ress}`);
+    // this.logger.log(`LOGexecute ALLLL:: , ${JSON.stringify(ress)}`);
+
+    // return query.executeTakeFirst();
+    return query.execute();
   }
 
   async updatePage(

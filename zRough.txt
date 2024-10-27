@@ -1,0 +1,13 @@
+
+// Refer:: https://docmost.com/docs/self-hosting/development/
+service postgresql start
+redis-server
+
+
+// UI:
+pnpm nx run client:dev
+
+// Backend:
+pnpm nx run server:start:dev
+
+

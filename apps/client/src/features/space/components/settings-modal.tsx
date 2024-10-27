@@ -3,6 +3,7 @@ import SpaceMembersList from "@/features/space/components/space-members.tsx";
 import AddSpaceMembersModal from "@/features/space/components/add-space-members-modal.tsx";
 import React, {useMemo} from "react";
 import SpaceDetails from "@/features/space/components/space-details.tsx";
+import ExportAll from "@/features/space/components/export-all.tsx";
 import {useSpaceQuery} from "@/features/space/queries/space-query.ts";
 import {useSpaceAbility} from "@/features/space/permissions/use-space-ability.ts";
 import {
@@ -55,6 +56,9 @@ export default function SpaceSettingsModal({
                   <Tabs.Tab fw={500} value="members">
                     Members
                   </Tabs.Tab>
+                  <Tabs.Tab fw={500} value="export_all">
+                    Import/Export
+                  </Tabs.Tab>
                 </Tabs.List>
 
                 <Tabs.Panel value="general">
@@ -83,6 +87,20 @@ export default function SpaceSettingsModal({
                     )}
                   />
                 </Tabs.Panel>
+
+                <Tabs.Panel value="export_all">
+                  <ExportAll
+                    spaceId={space?.id}
+                    readOnly={spaceAbility.cannot(
+                      SpaceCaslAction.Manage,
+                      SpaceCaslSubject.Settings,
+                    )}
+                  />
+                </Tabs.Panel>
+
+
+
+
               </Tabs>
             </div>
           </Modal.Body>

@@ -1,5 +1,6 @@
 import api from "@/lib/api-client";
 import {
+  ExportFormat,
   IExportPageParams,
   IMovePage,
   IPage,
@@ -8,6 +9,7 @@ import {
 } from "@/features/page/types/page.types";
 import { IAttachment, IPagination } from "@/lib/types.ts";
 import { saveAs } from "file-saver";
+import { decodeBlob } from "@/lib";
 
 export async function createPage(data: Partial<IPage>): Promise<IPage> {
   const req = await api.post<IPage>("/pages/create", data);
@@ -64,7 +66,40 @@ export async function exportPage(data: IExportPageParams): Promise<void> {
     .split("filename=")[1]
     .replace(/"/g, "");
 
+
+  console.log("CCC :: ", await req.data.text());
+  
+
   saveAs(req.data, decodeURIComponent(fileName));
+}
+
+export async function exportAllPageOfASpace(spaceId: string, format: ExportFormat): Promise<void> {
+  const req = await api.post("/pages/exportall", { spaceId, format }, {
+    responseType: "blob",
+  });
+  console.log("ERER ::: ", req.data);
+  var txtt = await req.data.text()
+  var ppp = JSON.parse(txtt)
+  console.log("ERER ::: ", Object.keys(ppp));
+  console.log("ERER ::: ", ppp["0192c9e0-bb82-735c-a073-ab7dfef3d74b"][1]);
+
+  saveAs(req.data, decodeURIComponent("fileName"));
+
+  return
+
+
+  const dataa = await req.data.text()
+  const dataa1 = JSON.parse(dataa)
+
+  console.log("ERER ::: ", dataa1);
+
+  const dd = JSON.stringify(dataa1[0])
+  console.log("dd ::: ", dd);
+
+//   saveAs(new Blob([JSON.stringify(dataa1[0])], {
+//     type: 'text/plain'
+// }), `${spaceId}123.txt`);
+  saveAs(req.data, `${spaceId}123.txt`);
 }
 
 export async function importPage(file: File, spaceId: string) {

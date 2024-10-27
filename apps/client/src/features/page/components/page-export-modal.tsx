@@ -75,7 +75,7 @@ interface ExportFormatSelection {
   format: ExportFormat;
   onChange: (value: string) => void;
 }
-function ExportFormatSelection({ format, onChange }: ExportFormatSelection) {
+export function ExportFormatSelection({ format, onChange }: ExportFormatSelection) {
   return (
     <Select
       data={[
