@@ -71,6 +71,32 @@ function PageActionMenu({ readOnly }: PageActionMenuProps) {
     notifications.show({ message: "Link copied" });
   };
 
+  const handleJustLog = () => {
+
+    const detailElements = document.querySelectorAll('[data-type="details"]');
+    detailElements.forEach((element) => {
+      console.log("EEEE ::: ", element);
+    });
+          console.log("------------------------------------------------------------------ ", );
+
+  };
+
+  const handleToggleAll = () => {
+
+    const detailElements = document.querySelectorAll('[data-type="details"]');
+
+    // Iterating over the NodeList to apply any specific styles or actions
+    detailElements.forEach((element) => {
+      // element.style.border = '1px solid blue';
+      // Any other operation you want to perform
+      // element.setAttribute('open', 'false');
+      element.removeAttribute('open');
+      console.log("EEEE ::: ", element);
+      
+    });
+    
+  };
+
   const handlePrint = () => {
     setTimeout(() => {
       window.print();
@@ -102,6 +128,22 @@ function PageActionMenu({ readOnly }: PageActionMenuProps) {
         </Menu.Target>
 
         <Menu.Dropdown>
+          <Menu.Item
+            leftSection={<IconLink size={16} />}
+            onClick={handleToggleAll}
+          >
+            Toggle all
+          </Menu.Item>
+          <Menu.Divider />
+
+          <Menu.Item
+            leftSection={<IconLink size={16} />}
+            onClick={handleJustLog}
+          >
+            Just Log
+          </Menu.Item>
+          <Menu.Divider />
+
           <Menu.Item
             leftSection={<IconLink size={16} />}
             onClick={handleCopyLink}
