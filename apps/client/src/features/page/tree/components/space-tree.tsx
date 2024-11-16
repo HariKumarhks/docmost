@@ -276,6 +276,9 @@ function Node({ node, style, dragHandle, tree }: NodeRendererProps<any>) {
     handleUpdateNodeIcon(node.id, emoji.native);
     updatePageMutation.mutateAsync({ pageId: node.id, icon: emoji.native });
 
+    console.log("RRER ::: ", emoji.native);
+    
+
     setTimeout(() => {
       emit({
         operation: "updateOne",

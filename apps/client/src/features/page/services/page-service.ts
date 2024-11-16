@@ -9,7 +9,6 @@ import {
 } from "@/features/page/types/page.types";
 import { IAttachment, IPagination } from "@/lib/types.ts";
 import { saveAs } from "file-saver";
-import { decodeBlob } from "@/lib";
 
 export async function createPage(data: Partial<IPage>): Promise<IPage> {
   const req = await api.post<IPage>("/pages/create", data);
